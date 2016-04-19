@@ -3339,12 +3339,21 @@ function jstreeCtrl($scope) {
 
 /** start for online shop **/
 
-function authController($scope){
+function authController($scope, $http, $rootScope, $location){
     $scope.user = {username:'',password:'',confirmPassword:'',email:'',firstName:'',lastName:'',agree:false};
     $scope.error_message = '';
     
     $scope.login = function(){
-        $scope.error_message = "Thank you for login " + $scope.user.username
+        $http.post('/auth/login', $scope.user).success(function(data){
+          if(data.state == 'success'){
+            $rootScope.authenticated = true;
+            $rootScope.current_user = data.user.username;
+            $location.path('/commerce/products_grid');
+          }
+          else{
+            $scope.error_message = data.message;
+          }
+        });
     };
 
     $scope.register = function(){
@@ -3355,12 +3364,38 @@ function authController($scope){
         } else if (!$scope.user.agree){
             $scope.error_message = "Term and Condition must be checked"
         }else {
-            $scope.error_message = "Registration has been sent for " + $scope.user.username
+            $http.post('/auth/signup', $scope.user).success(function(data){
+              if(data.state == 'success'){
+                $rootScope.authenticated = true;
+                $rootScope.current_user = data.user.username;
+                $location.path('/commerce/products_grid');
+              }
+              else{        
+                $scope.error_message = data.message;
+              }
+            });
         }
     };
+    
+   
 
 
 }
+
+function navController($scope, $rootScope){
+    $scope.current_user = $rootScope.current_user
+}
+
+
+function topNavController($scope, $rootScope, $http, $location){
+  $scope.signout = function(){
+    $http.get('auth/signout');
+    $rootScope.authenticated = false;
+    $rootScope.current_user = '';
+    $location.path('/login');
+  };
+}
+
 /**
  *
  * Pass all functions into module
@@ -3405,5 +3440,7 @@ angular
     .controller('touchspinCtrl', touchspinCtrl)
     .controller('tourCtrl', tourCtrl)
     .controller('jstreeCtrl', jstreeCtrl)
-    .controller('authController', authController);
+    .controller('authController', authController)
+    .controller('navController', navController)
+    .controller('topNavController', topNavController);
 

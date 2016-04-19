@@ -173,11 +173,6 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, IdlePro
                 }
             }
         })
-        .state('layouts', {
-            url: "/layouts",
-            templateUrl: "views/layouts.html",
-            data: { pageTitle: 'Layouts' },
-        })
         .state('charts', {
             abstract: true,
             url: "/charts",
