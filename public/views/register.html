@@ -1,0 +1,40 @@
+<div class="middle-box text-center loginscreen   animated fadeInDown" ng-controller="authController">
+    <div>
+<!--        <div>
+
+            <h3 class="logo-name">MN</h6>
+
+        </div> -->
+        <h3>Register to Mean Online Shop</h3>
+        <p>Your perfect online Shop Partner</p>
+        <p class="text-warning">{{error_message}}</p>   
+        <form class="m-t" role="form" ng-submit=register()>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Username" required="" ng-model="user.username">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="Password" required="" ng-model="user.password">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="Confirm Password" required="" ng-model="user.confirmPassword">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="First Name" required="" ng-model="user.firstName">
+            </div>
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Last Name" required="" ng-model="user.lastName">
+            </div>
+            <div class="form-group">
+                <input type="email" class="form-control" placeholder="Email" required="" ng-model="user.email">
+            </div>
+            <div class="form-group">
+                <div class="checkbox i-checks"><label> <input type="checkbox" ng-model="user.agree"><i></i> Agree the terms and policy </label></div>
+            </div>
+            <button type="submit" class="btn btn-primary block full-width m-b">Register</button>
+
+            <p class="text-muted text-center"><small>Already have an account?</small></p>
+            <a class="btn btn-sm btn-white btn-block" ui-sref="login">Login</a>
+        </form>
+        <p class="m-t"> <small>Inspinia we app framework base on Bootstrap 3 &copy; 2014</small> </p>
+    </div>
+</div>
