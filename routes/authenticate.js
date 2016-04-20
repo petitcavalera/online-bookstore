@@ -10,19 +10,24 @@ module.exports = function(passport){
 
     //sends failure login state back to angular
     router.get('/failure', function(req, res){
-        res.send({state: 'failure', user: null, message: "Invalid username or password"});
+        var m1 = req.flash('error')[0]
+        console.log("error "+ m1)
+        res.send({state: 'failure', user: null, message: m1});
     });
 
     //log in
     router.post('/login', passport.authenticate('login', {
         successRedirect: '/auth/success',
-        failureRedirect: '/auth/failure'
+        failureRedirect: '/auth/failure',
+        failureFlash: true 
     }));
 
     //sign up
     router.post('/signup', passport.authenticate('signup', {
         successRedirect: '/auth/success',
-        failureRedirect: '/auth/failure'
+        failureRedirect: '/auth/failure',
+        failureFlash: true 
+       
     }));
 
     //log out

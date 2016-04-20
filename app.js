@@ -7,8 +7,12 @@ var bodyParser = require('body-parser');
 
 var passport = require('passport');
 var session = require('express-session');
+var flash = require('connect-flash');
 
 var app = express();
+
+app.use(flash());
+
 
 
 //initialize mongoose schemas

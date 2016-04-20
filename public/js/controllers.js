@@ -3383,7 +3383,8 @@ function authController($scope, $http, $rootScope, $location){
 }
 
 function navController($scope, $rootScope){
-    $scope.current_user = $rootScope.current_user
+    $scope.current_user = $rootScope.current_user;
+    $scope.authenticated = $rootScope.authenticated;
 }
 
 
