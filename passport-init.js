@@ -35,13 +35,15 @@ module.exports = function(passport){
                         return done(err);
                     // Username does not exist, log the error and redirect back
                     if (!user){
-                        console.log('User Not Found with username '+username);
-                        return done(null, false);                 
+                        var errmessage = "User Not Found with username "+username;
+                        console.log(errmessage);
+                        return done(null, false, {message : errmessage});                 
                     }
                     // User exists but wrong password, log the error 
                     if (!isValidPassword(user, password)){
-                        console.log('Invalid Password');
-                        return done(null, false); // redirect back to login page
+                        var errmessage = "Invalid Password";
+                        console.log(errmessage);
+                        return done(null, false, {message : errmessage}); // redirect back to login page
                     }
                     // User and password both match, return user from done method
                     // which will be treated like success
@@ -66,8 +68,9 @@ module.exports = function(passport){
                 }
                 // already exists
                 if (user) {
-                    console.log('User already exists with username: '+username);
-                    return done(null, false);
+                    var errmessage = "User already exists with username: "+username ;
+                    console.log(errmessage);
+                    return done(null, false, {message : errmessage});
                 } else {
                     // if there is no user, create the user
                     var newUser = new User();                    

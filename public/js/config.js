@@ -1373,6 +1373,17 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, IdlePro
 angular
     .module('inspinia')
     .config(config)
-    .run(function($rootScope, $state) {
+    .run(function($rootScope, $state, $http) {
         $rootScope.$state = $state;
+    
+         $http.get("auth/getUser").then(function(result) {     
+          if(result.data != ''){
+              $rootScope.authenticated = true;
+              $rootScope.current_user = result.data.username;
+          }else{
+              $rootScope.authenticated = false;
+              $rootScope.current_user = '';
+          }
+         $scope.currentUser = result.data;
+  })
     });
