@@ -3357,7 +3357,7 @@ function authController($scope, $http, $rootScope, $location){
     };
 
     $scope.register = function(){
-        if ($scope.user.password.length < 6 || $scope.user.password.length < 10 ){
+        if ($scope.user.password.length < 6 || $scope.user.password.length > 10 ){
             $scope.error_message = "Password must be minimun 6 and maximum 10 characters"
         } else if ($scope.user.password != $scope.user.confirmPassword) {
             $scope.error_message = "Password does not match"
@@ -3376,10 +3376,6 @@ function authController($scope, $http, $rootScope, $location){
             });
         }
     };
-    
-   
-
-
 }
 
 function navController($scope, $rootScope){
@@ -3392,7 +3388,7 @@ function topNavController($scope, $rootScope, $http, $location){
     $http.get('auth/signout');
     $rootScope.authenticated = false;
     $rootScope.current_user = '';
-    $location.path('/login');
+    $location.path('/landing');
   };
 }
 
