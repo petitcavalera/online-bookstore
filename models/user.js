@@ -11,8 +11,8 @@ var userSchema = new mongoose.Schema({
     email: String,
     status: String,
     role: String,
-    shippingAddr: String,
-    BillingAddr: String,
+    shippingAddress: String,
+    billingAddress: String,
     //hash created from password
     created_at: {type: Date, default: Date.now}
 });

@@ -28,6 +28,7 @@ else{
 }
 
 var authenticate = require('./routes/authenticate')(passport);
+var userProfile = require('./routes/userProfile');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -57,6 +58,7 @@ var initPassport = require('./passport-init');
 initPassport(passport);
 
 app.use('/auth', authenticate);
+app.use('/userProfile', userProfile);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
