@@ -12,15 +12,7 @@
             <!--<li>-->
                 <!--<span class="m-r-sm text-muted welcome-message">Welcome to INSPINIA+ Admin Theme.</span>-->
             <!--</li>-->
-            <li uib-dropdown>
-                <a class="count-info" href uib-dropdown-toggle>
-                    Language
-                </a>
-                <ul uib-dropdown-menu class="animated fadeInRight m-t-xs" ng-controller="translateCtrl">
-                    <li><a ng-click="changeLanguage('en')">English</a></li>
-                    <li><a ng-click="changeLanguage('es')">Spanish</a></li>
-                </ul>
-            </li>
+         
             <li uib-dropdown>
                 <a class="count-info" href uib-dropdown-toggle>
                     <i class="fa fa-envelope"></i> <span class="label label-warning">16</span>
@@ -123,7 +115,7 @@
                 <a ng-if="authenticated" ng-click="signout()">
                     <i class="fa fa-sign-out"></i> Log out
                 </a>
-                 <a  ng-if="!authenticated" ng-click="signout()">
+                 <a  ng-if="!authenticated" href="#/login">
                     <i class="fa fa-sign-in"></i> Log in
                 </a>
             </li>
