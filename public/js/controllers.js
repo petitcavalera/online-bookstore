@@ -3359,7 +3359,7 @@ function authController($scope, $http, $rootScope, $location){
     $scope.register = function(){
         if ($scope.user.password.length < 6 || $scope.user.password.length > 10 ){
             $scope.error_message = "Password must be minimun 6 and maximum 10 characters"
-        } else if ($scope.user.password != $scope.user.confirmPassword) {
+        } else if ($scope.user.password != $scope.user.confirmpassword) {
             $scope.error_message = "Password does not match"
         } else if (!$scope.user.agree){
             $scope.error_message = "Term and Condition must be checked"
@@ -3378,21 +3378,42 @@ function authController($scope, $http, $rootScope, $location){
     };
 }
 
-function navController($scope, $rootScope){
-    $scope.current_user = $rootScope.current_user;
-    $scope.authenticated = $rootScope.authenticated;
+function navController($scope, $rootScope, $http){
+        $scope.current_user = $rootScope.current_user;
+        $scope.authenticated = $rootScope.authenticated;
+        $http.get("auth/getUser").then(function(result) {     
+            if(result.data != ''){
+                $scope.user = result.data;
+            }else{
+                $scope.authenticated = false;
+                $scope.user = '';
+            }
+        })
 }
 
 
 function topNavController($scope, $rootScope, $http, $location){
   $scope.signout = function(){
-    $http.get('auth/signout');
-    $rootScope.authenticated = false;
-    $rootScope.current_user = '';
-    $location.path('/landing');
+        $http.get('auth/signout');
+        $rootScope.authenticated = false;
+        $rootScope.current_user = '';
+        $location.path('/landing');
   };
 }
-
+function userController($scope, $rootScope,$location, $http){
+    if ($rootScope.authenticated){
+         $http.get("auth/getUser").then(function(result) {     
+          if(result.data != ''){
+              $scope.user = result.data;
+          }else{
+              $scope.authenticated = false;
+              $scope.user = '';
+          }
+        })
+    }else{
+        $location.path('/login');
+    };
+}
 /**
  *
  * Pass all functions into module
@@ -3439,5 +3460,6 @@ angular
     .controller('jstreeCtrl', jstreeCtrl)
     .controller('authController', authController)
     .controller('navController', navController)
-    .controller('topNavController', topNavController);
+    .controller('topNavController', topNavController)
+    .controller('userController', userController);
 

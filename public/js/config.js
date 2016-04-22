@@ -559,123 +559,10 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, IdlePro
             url: "/app",
             templateUrl: "views/common/content.html",
         })
-        .state('app.contacts', {
-            url: "/contacts",
-            templateUrl: "views/contacts.html",
-            data: { pageTitle: 'Contacts' }
-        })
-        .state('app.contacts_2', {
-            url: "/contacts_2",
-            templateUrl: "views/contacts_2.html",
-            data: { pageTitle: 'Contacts 2' }
-        })
         .state('app.profile', {
             url: "/profile",
             templateUrl: "views/profile.html",
             data: { pageTitle: 'Profile' }
-        })
-        .state('app.profile_2', {
-            url: "/profile_2",
-            templateUrl: "views/profile_2.html",
-            data: { pageTitle: 'Profile_2'},
-            resolve: {
-                loadPlugin: function ($ocLazyLoad) {
-                    return $ocLazyLoad.load([
-                        {
-                            files: ['js/plugins/sparkline/jquery.sparkline.min.js']
-                        }
-                    ]);
-                }
-            }
-        })
-        .state('app.projects', {
-            url: "/projects",
-            templateUrl: "views/projects.html",
-            data: { pageTitle: 'Projects' }
-        })
-        .state('app.project_detail', {
-            url: "/project_detail",
-            templateUrl: "views/project_detail.html",
-            data: { pageTitle: 'Project detail' }
-        })
-        .state('app.file_manager', {
-            url: "/file_manager",
-            templateUrl: "views/file_manager.html",
-            data: { pageTitle: 'File manager' }
-        })
-        .state('app.calendar', {
-            url: "/calendar",
-            templateUrl: "views/calendar.html",
-            data: { pageTitle: 'Calendar' },
-            resolve: {
-                loadPlugin: function ($ocLazyLoad) {
-                    return $ocLazyLoad.load([
-                        {
-                            insertBefore: '#loadBefore',
-                            files: ['css/plugins/fullcalendar/fullcalendar.css','js/plugins/fullcalendar/fullcalendar.min.js','js/plugins/fullcalendar/gcal.js']
-                        },
-                        {
-                            name: 'ui.calendar',
-                            files: ['js/plugins/fullcalendar/calendar.js']
-                        }
-                    ]);
-                }
-            }
-        })
-        .state('app.faq', {
-            url: "/faq",
-            templateUrl: "views/faq.html",
-            data: { pageTitle: 'FAQ' }
-        })
-        .state('app.timeline', {
-            url: "/timeline",
-            templateUrl: "views/timeline.html",
-            data: { pageTitle: 'Timeline' }
-        })
-        .state('app.pin_board', {
-            url: "/pin_board",
-            templateUrl: "views/pin_board.html",
-            data: { pageTitle: 'Pin board' }
-        })
-        .state('app.invoice', {
-            url: "/invoice",
-            templateUrl: "views/invoice.html",
-            data: { pageTitle: 'Invoice' }
-        })
-        .state('app.blog', {
-            url: "/blog",
-            templateUrl: "views/blog.html",
-            data: { pageTitle: 'Blog' }
-        })
-        .state('app.article', {
-            url: "/article",
-            templateUrl: "views/article.html",
-            data: { pageTitle: 'Article' }
-        })
-        .state('app.issue_tracker', {
-            url: "/issue_tracker",
-            templateUrl: "views/issue_tracker.html",
-            data: { pageTitle: 'Issue Tracker' }
-        })
-        .state('app.clients', {
-            url: "/clients",
-            templateUrl: "views/clients.html",
-            data: { pageTitle: 'Clients' }
-        })
-        .state('app.teams_board', {
-            url: "/teams_board",
-            templateUrl: "views/teams_board.html",
-            data: { pageTitle: 'Teams board' }
-        })
-        .state('app.social_feed', {
-            url: "/social_feed",
-            templateUrl: "views/social_feed.html",
-            data: { pageTitle: 'Social feed' }
-        })
-        .state('app.vote_list', {
-            url: "/vote_list",
-            templateUrl: "views/vote_list.html",
-            data: { pageTitle: 'Vote list' }
         })
         .state('pages', {
             abstract: true,
@@ -1384,6 +1271,6 @@ angular
               $rootScope.authenticated = false;
               $rootScope.current_user = '';
           }
-         $scope.currentUser = result.data;
+         //$scope.currentUser = result.data;
   })
     });
