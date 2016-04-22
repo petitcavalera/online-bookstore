@@ -1108,7 +1108,7 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, IdlePro
         .state('commerce.products_grid', {
             url: "/products_grid",
             templateUrl: "views/ecommerce_products_grid.html",
-            data: { pageTitle: 'E-commerce grid' }
+            data: { pageTitle: 'Books' }
         })
         .state('commerce.product_list', {
             url: "/product_list",
@@ -1264,7 +1264,7 @@ angular
         $rootScope.$state = $state;
     
          $http.get("auth/getUser").then(function(result) {     
-          if(result.data != ''){
+          if(result.data != ''){             
               $rootScope.authenticated = true;
               $rootScope.current_user = result.data.username;
           }else{
