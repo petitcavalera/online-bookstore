@@ -17,6 +17,7 @@ app.use(flash());
 
 //initialize mongoose schemas
 require('./models/user');
+require('./models/product');
 var mongoose = require('mongoose');                         //add for Mongo support
 
 //connect to Mongo
@@ -29,6 +30,7 @@ else{
 
 var authenticate = require('./routes/authenticate')(passport);
 var userProfile = require('./routes/userProfile');
+var manageProducts = require('./routes/manageProducts');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -59,6 +61,7 @@ initPassport(passport);
 
 app.use('/auth', authenticate);
 app.use('/userProfile', userProfile);
+app.use('/product', manageProducts);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
