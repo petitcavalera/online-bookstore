@@ -1140,7 +1140,7 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, IdlePro
 
         })
         .state('commerce.product_details', {
-            url: "/product_details",
+            url: "/product_details/:id",
             templateUrl: "views/ecommerce_product_details.html",
             data: { pageTitle: 'E-commerce Product detail' },
             resolve: {
@@ -1166,6 +1166,16 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, IdlePro
             url: "/cart",
             templateUrl: "views/ecommerce_cart.html",
             data: { pageTitle: 'Shopping cart' }
+        })
+        .state('commerce.add_product', {
+            url: "/add_product",
+            templateUrl: "views/add_product.html",
+            data: { pageTitle: 'E-commerce add product' }
+        })
+        .state('commerce.edit_product', {
+            url: "/edit_product/:id",
+            templateUrl: "views/edit_product.html",
+            data: { pageTitle: 'E-commerce edit product' }
         })
         .state('gallery', {
             abstract: true,

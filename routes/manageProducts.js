@@ -37,8 +37,7 @@ router.route('/all/')
         product.image = req.body.image;
         product.price = req.body.price;
         product.stock = req.body.stock;
-        product.status = req.body.status; 
-        product.created_at = req.body.created_at; 
+        product.status = req.body.status;
 		product.save(function(err, post) {
 			if (err){
 				return res.send(500, err);
@@ -80,8 +79,7 @@ router.route('/id/:id')
                 product.image = req.body.image;
                 product.price = req.body.price;
                 product.stock = req.body.stock;
-                product.status = req.body.status; 
-                product.created_at = req.body.created_at;       
+                product.status = req.body.status;     
                 product.save(function(err, product){
                     if(err)                        
                         res.send({state: 'failure', product:product, message: "Failed to update product"});

@@ -3342,18 +3342,21 @@ function jstreeCtrl($scope) {
 function authController($scope, $http, $rootScope, $location){
     $scope.user = {username:'',password:'',confirmPassword:'',email:'',firstName:'',lastName:'',agree:false};
     $scope.error_message = '';
-    
-    $scope.login = function(){
-        $http.post('/auth/login', $scope.user).success(function(data){
-          if(data.state == 'success'){
-            $rootScope.authenticated = true;
-            $rootScope.current_user = data.user.username;
-            $location.path('/commerce/products_grid');
-          }
-          else{
-            $scope.error_message = data.message;
-          }
-        });
+    if ($rootScope.authenticated){
+        $location.path('/commerce/products_grid');
+    }else{
+        $scope.login = function(){
+            $http.post('/auth/login', $scope.user).success(function(data){
+            if(data.state == 'success'){
+                $rootScope.authenticated = true;
+                $rootScope.current_user = data.user.username;
+                $location.path('/commerce/products_grid');
+            }
+            else{
+                $scope.error_message = data.message;
+            }
+            });
+        };
     };
 
     $scope.register = function(){
@@ -3366,6 +3369,7 @@ function authController($scope, $http, $rootScope, $location){
         }else {
             $http.post('/auth/signup', $scope.user).success(function(data){
               if(data.state == 'success'){
+                alert(data.state);
                 $rootScope.authenticated = true;
                 $rootScope.current_user = data.user.username;
                 $location.path('/commerce/products_grid');
@@ -3391,7 +3395,6 @@ function navController($scope, $rootScope, $http){
         })
 }
 
-
 function topNavController($scope, $rootScope, $http, $location){
   $scope.signout = function(){
         $http.get('auth/signout');
@@ -3414,6 +3417,76 @@ function userController($scope, $rootScope,$location, $http){
         $location.path('/login');
     };
 }
+function productController($scope, $rootScope, $location, $http){
+    $http.get("product/all").then(function(result) {     
+        if(result.data != ''){
+            $scope.currentPage = 0;
+            /*set the total maximum product grid in one page here */
+            $scope.pageSize = 8;
+            $scope.product = result.data;
+            $scope.numberOfPages=function(){
+                return Math.ceil($scope.product.length/$scope.pageSize);                
+            }
+        }else{
+            $scope.authenticated = false;
+            $scope.product = '';
+        }
+    });
+    $scope.getStartFrom = function (){
+        return ($scope.currentPage * $scope.pageSize);
+    }
+}
+function productItemController($scope, $stateParams, $http, $location){
+    $http.get("product/id/"+ $stateParams.id).then(function(result) {     
+        if(result.data != ''){
+            $scope.product = result.data;
+        }else{
+            $scope.product = '';
+        }
+    });
+}
+
+function addProductController($scope, $rootScope, $http, $location){
+    if ($rootScope.authenticated){
+        $scope.addProduct = function(){
+            $http.post("product/all", $scope.product).success(function(data, status){
+                $scope.error_message = 'New product has been successfully added into database';
+                $scope.product = '';
+                $location.path('/commerce/add_product');
+            })
+            .error(function(data,status,header,config){
+                $scope.error_message = "http error: "+ status;
+            });
+        };
+    }else{
+        $location.path("/login");
+    }
+}
+
+function editProductController($scope, $rootScope, $http, $location, $stateParams){
+    if ($rootScope.authenticated){
+        $http.get("product/id/"+ $stateParams.id).then(function(result) {     
+            if(result.data != ''){
+                $scope.product = result.data;
+            }else{
+                $scope.product = '';
+            }
+        });
+
+        $scope.updateProduct = function(){
+            $http.put("product/id/"+ $stateParams.id,$scope.product).success(function(data, status){
+                $scope.error_message = 'Product has been successfully updated';
+            })
+            .error(function(data,status,header,config){
+                $scope.error_message = "http error: "+ status;
+            });
+        };
+    }else{
+        $location.path("/login");
+    }
+}
+
+
 /**
  *
  * Pass all functions into module
@@ -3461,5 +3534,18 @@ angular
     .controller('authController', authController)
     .controller('navController', navController)
     .controller('topNavController', topNavController)
-    .controller('userController', userController);
+    .controller('userController', userController)
+    .controller('productController', productController)
+    .controller('productItemController',productItemController)
+    .controller('addProductController',addProductController)
+    .controller('editProductController',editProductController)
+    .filter('startFrom', function() {
+        return function(input, start) {
+            if (!input || !input.length) {
+                 return;
+            }
+            start = +start;
+            return input.slice(start);
+            }
+        });
 
