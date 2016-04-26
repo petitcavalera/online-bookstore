@@ -3357,8 +3357,8 @@ function authController($scope, $http, $rootScope, $location){
     };
 
     $scope.register = function(){
-        if ($scope.user.password.length < 6 || $scope.user.password.length > 10 ){
-            $scope.error_message = "Password must be minimun 6 and maximum 10 characters"
+        if ($scope.user.password.length < 6 ){
+            $scope.error_message = "Password must be minimun 6 characters"
         } else if ($scope.user.password != $scope.user.confirmpassword) {
             $scope.error_message = "Password does not match"
         } else if (!$scope.user.agree){
@@ -3400,17 +3400,68 @@ function topNavController($scope, $rootScope, $http, $location){
         $location.path('/landing');
   };
 }
-function userController($scope, $rootScope,$location, $http){
+function userController($scope, $rootScope,$location, $http){   
     if ($rootScope.authenticated){
-         $http.get("auth/getUser").then(function(result) {     
-          if(result.data != ''){
-              $scope.user = result.data;
-          }else{
-              $scope.authenticated = false;
-              $scope.user = '';
-          }
+             $http.get("auth/getUser").then(function(result) {     
+              if(result.data != ''){
+                  $scope.user = result.data;                 
+              }else{
+                  $scope.authenticated = false;
+                  $scope.user = '';
+              }            
         })
-    }else{
+             
+             $scope.alerts = []; 
+        
+            $scope.closeAlert = function(index) {
+                $scope.alerts.splice(index, 1);
+            };
+        
+            $scope.udpateProfile = function (user){               
+             $http.put('/userProfile/'+ user._id,user).success(function(data){
+              if(data.state == 'success'){                
+                 $scope.alerts = []; 
+                 $scope.alerts.push({type:'success', msg:data.message});
+              }
+              else{
+                $scope.alerts = []; 
+                $scope.alerts.push({type:'danger', msg:data.message});
+                 
+              }
+            });
+        }
+            
+            $scope.changePassword = function (changeUserPassword){               
+                if(changeUserPassword.newPasswordOne != changeUserPassword.newPasswordTwo){
+                    $scope.alerts = []; 
+                    $scope.alerts.push({type:'danger', msg:'Passwords do not match'});                    
+                } else if (changeUserPassword.newPasswordOne.length < 6){
+                    $scope.alerts = []; 
+                    $scope.alerts.push({type:'danger', msg:'Password must be minimun 6 characters'});  
+                }else{
+                     $http.put('/userProfile/changePassword/'+ $scope.user._id,changeUserPassword).success(function(data){
+                      if(data.state == 'success'){                
+                         $scope.alerts = []; 
+                         $scope.alerts.push({type:'success', msg:data.message});
+                      }
+                      else{
+                        $scope.alerts = []; 
+                        $scope.alerts.push({type:'danger', msg:data.message});
+
+                      }
+                    
+                }
+            )}
+            
+            }
+            
+            $scope.updateImage = function(file) {    
+                alert(file);            
+
+            }
+        
+    }
+    else{
         $location.path('/login');
     };
 }
@@ -3460,6 +3511,5 @@ angular
     .controller('jstreeCtrl', jstreeCtrl)
     .controller('authController', authController)
     .controller('navController', navController)
-    .controller('topNavController', topNavController)
-    .controller('userController', userController);
-
+    .controller('topNavController', topNavController)   
+   .controller('userController', userController)
