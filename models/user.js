@@ -13,6 +13,7 @@ var userSchema = new mongoose.Schema({
     role: String,
     shippingAddress: String,
     billingAddress: String,
+    isAdmin: Boolean,
     //hash created from password
     created_at: {type: Date, default: Date.now}
 });

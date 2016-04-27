@@ -14,13 +14,9 @@
 
     </div>
 </div>
-<div class="wrapper wrapper-content" ng-controller="userController">
-    <div class="ibox-content">
-                    <div>
-                        <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert>                        
-                    </div>
-    </div>
-    
+<div class="wrapper wrapper-content" ng-controller="userController">    
+     <div>
+         <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert>     </div>
      <div class="tabs-container">
 
                     <uib-tabset class="tabs">
