@@ -3,6 +3,22 @@ var router = express.Router();
 
 var mongoose = require( 'mongoose' );
 var Product = mongoose.model('Product');
+var multer = require('multer');
+
+
+var storage = multer.diskStorage({ //multers disk storage settings
+        destination: function (req, file, cb) {
+            cb(null, './uploads/')
+        },
+        filename: function (req, file, cb) {
+            console.log(file);
+            var datetimestamp = Date.now();
+            cb(null, file.originalname)
+        }
+    });
+var upload = multer({ //multer settings
+                    storage: storage
+                }).single('file');
 
 //Used for routes that must be authenticated.
 function isAuthenticated (req, res, next) {
@@ -28,7 +44,7 @@ router.use('/', isAuthenticated);
 router.route('/all/')
 	//creates a new post
 	.post(function(req, res){
-        console.log('postProduct1');
+        console.log(req.body.image);
 		var product = new Product();
         product.title = req.body.title;
         product.author = req.body.author;
@@ -40,6 +56,7 @@ router.route('/all/')
         product.status = req.body.status;
 		product.save(function(err, post) {
 			if (err){
+                console.log(err);
 				return res.send(500, err);
 			}
 			return res.json(product);
@@ -102,7 +119,18 @@ router.route('/search/')
         });
     
        })
-    
+router.route('/upload/')
+    .post(function(req, res) {
+        upload(req,res,function(err){
+            if(err){
+                 console.log(err);
+                 res.json({error_code:1,err_desc:err});
+                 return;
+            }
+             res.json({error_code:0,err_desc:null});
+        })
+       
+    })
 
 
 module.exports = router;

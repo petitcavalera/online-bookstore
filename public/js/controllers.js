@@ -3498,11 +3498,13 @@ function productItemController($scope, $stateParams, $http, $location){
     });
 }
 
-function addProductController($scope, $rootScope, $http, $location){
+function addProductController($scope, $rootScope, $http, $location, Upload){
     if ($rootScope.authenticated){
         
         $scope.alerts = []; 
         $scope.addProduct = function(){
+            $scope.product.image = $scope.file.name;
+            console.log($scope.product.image);
             $http.post("product/all", $scope.product).success(function(data, status){
                 $scope.alerts = []; 
                 $scope.alerts.push({type:'success', msg:'New product has been successfully added into database'});               
@@ -3517,6 +3519,29 @@ function addProductController($scope, $rootScope, $http, $location){
         $scope.closeAlert = function(index) {
                 $scope.alerts.splice(index, 1);
         };
+        
+        
+        
+        $scope.upload = function (file) {
+            Upload.upload({
+                url: 'http://localhost:3000/product/upload', //webAPI exposed to upload the file
+                data:{file:file} //pass file as data, should be user ng-model
+            }).then(function (resp) { //upload function returns a promise
+                if(resp.data.error_code === 0){ //validate success
+                    $scope.progress ='Success ' + resp.config.data.file.name + ' uploaded.';
+                } else {
+                    $scope.progress = 'an error occured';
+                }
+            }, function (resp) { //catch error
+                console.log('Error status: ' + resp.status);                
+            }, function (evt) { 
+                console.log(evt);
+                var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+                $scope.progress = 'progress: ' + progressPercentage + '% '; // capture upload progress
+            });
+        };
+        
     }else{
         $location.path("/login");
     }
@@ -3649,7 +3674,7 @@ angular
     .controller('userController', userController)
     .controller('productController', productController)
     .controller('productItemController',productItemController)
-    .controller('addProductController',addProductController)
+    .controller('addProductController', ['$scope', '$rootScope', '$http', '$location','Upload',addProductController])
     .controller('editProductController',editProductController)
     .filter('startFrom', function() {
         return function(input, start) {

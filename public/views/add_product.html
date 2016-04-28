@@ -18,8 +18,7 @@
                  <div>
                     <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert>     
                 </div>
-                <h3 class="font-bold">Enter new product details</h3>
-                    <p class="text-warning">{{error_message}}</p>   
+                <h3 class="font-bold">Enter new product details</h3>                    
                     <form class="form-horizontal" ng-submit="addProduct()">
                         <br/>
                         <div class="form-group"><label class="col-sm-2 control-label">Book Title</label>
@@ -52,8 +51,19 @@
                             </div>
                         </div>
                         <div class="form-group"><label class="col-sm-2 control-label">Image</label>
-                            <div class="col-sm-10">
-                                <input type="text" placeholder="Image" class="form-control" ng-model="product.image">
+                            <div class="col-sm-10">                                                            
+                            <input 
+                               type="file" 
+                               ngf-select 
+                               ng-model="file" 
+                               name="file" 
+                               ngf-pattern="'image/*'"
+                               accept="image/*" 
+                               ngf-max-size="20MB" 
+                               />
+                            Image thumbnail: <img style="width:100px;" ngf-thumbnail="file"/>    
+                            <button type="button" ng-click="upload(file)">upload image</button>
+                            <p>{{progress}}</p>                   
                             </div>
                         </div>
                         <div class="form-group"><label class="col-sm-2 control-label">Price</label>
@@ -78,7 +88,7 @@
                         </div>
                         <div class="hr-line-dashed"></div>
                         <div class="form-group">
-                            <div class="col-sm-4 col-sm-offset-2">
+                            <div class="col-sm-10 col-sm-offset-2">
                                <button class="btn btn-primary" type="submit">Add Product</button>
                             </div>
                         </div>
