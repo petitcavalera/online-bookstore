@@ -5253,7 +5253,7 @@ del {
 }
 .product-imitation {
   text-align: center;
-  padding: 90px 0;
+  /*padding: 90px 0;*/
   background-color: #f8f8f9;
   color: #bebec3;
   font-weight: 600;
@@ -5325,7 +5325,7 @@ table.shoping-cart-table tr td:last-child {
 .image-imitation {
   background-color: #f8f8f9;
   text-align: center;
-  padding: 200px 0;
+  /*padding: 200px 0;*/
 }
 .product-main-price small {
   font-size: 10px;

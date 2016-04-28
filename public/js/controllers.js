@@ -3547,7 +3547,7 @@ function addProductController($scope, $rootScope, $http, $location, Upload){
     }
 }
 
-function editProductController($scope, $rootScope, $http, $location, $stateParams){
+function editProductController($scope, $rootScope, $http, $location, $stateParams, Upload){
     if ($rootScope.authenticated){
         $scope.alerts = []; 
         $http.get("product/id/"+ $stateParams.id).then(function(result) {     
@@ -3558,8 +3558,10 @@ function editProductController($scope, $rootScope, $http, $location, $stateParam
             }
         });
 
-        $scope.updateProduct = function(){
-            $http.put("product/id/"+ $stateParams.id,$scope.product).success(function(data, status){ 
+        $scope.updateProduct = updateProduct;
+        
+        function updateProduct(){
+            $http.put("product/id/"+ $stateParams.id,$scope.product).success(function(data, status){                 
                 $scope.alerts = [];
                 $scope.alerts.push({type:'success', msg:'Product has been successfully updated'});                    
             })
@@ -3571,6 +3573,27 @@ function editProductController($scope, $rootScope, $http, $location, $stateParam
         
         $scope.closeAlert = function(index) {
                 $scope.alerts.splice(index, 1);
+        };
+        
+        $scope.changePicture = function (file) {
+            Upload.upload({
+                url: 'http://localhost:3000/product/upload', //webAPI exposed to upload the file
+                data:{file:file} //pass file as data, should be user ng-model
+            }).then(function (resp) { //upload function returns a promise
+                if(resp.data.error_code === 0){ //validate success
+                    $scope.product.image = resp.config.data.file.name;   
+                    $scope.updateProduct();
+                } else {
+                    $scope.progress = 'an error occured';
+                }
+            }, function (resp) { //catch error
+                console.log('Error status: ' + resp.status);                
+            }, function (evt) { 
+                console.log(evt);
+                var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+                $scope.progress = 'progress: ' + progressPercentage + '% '; // capture upload progress
+            });
         };
         
     }else{
@@ -3674,7 +3697,7 @@ angular
     .controller('userController', userController)
     .controller('productController', productController)
     .controller('productItemController',productItemController)
-    .controller('addProductController', ['$scope', '$rootScope', '$http', '$location','Upload',addProductController])
+    .controller('addProductController', addProductController)
     .controller('editProductController',editProductController)
     .filter('startFrom', function() {
         return function(input, start) {
