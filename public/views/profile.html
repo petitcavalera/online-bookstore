@@ -28,16 +28,34 @@
                     <h5>Profile Detail</h5>
                 </div>
                 <div>
-                    <div class="ibox-content no-padding border-left-right">
-                        <img alt="image" class="img-responsive" src="img/profile_big.jpg">
-                        <form ng-submit="updateImage(file)" enctype='multipart/form-data'>
-                        <input type='file' name='file'/> 
-                         <button type="submit" class="btn btn-primary btn-sm btn-block"> Change Picture</button></form>
-                    </div>
+                <div class="ibox-content no-padding border-left-right">
+                    <center><img class="img-responsive" ng-src="/img/products/{{user.image}}"/></center>
+                </div>
+                    </br>
+                <div class="col-sm-20">                                                            
+                <input 
+                    type="file" 
+                    ngf-select 
+                    ng-model="file" 
+                    name="file" 
+                    ngf-pattern="'image/*'"
+                    accept="image/*" 
+                    ngf-max-size="20MB" 
+                    class="btn btn-primary btn-sm btn-block"/>
+                </div>
+                <div class="col-sm-20">
+                <button type="button" ng-disabled="!file.name" ng-click="upload(file)" class="btn btn-primary btn-sm btn-block"><i class="glyphicon glyphicon-floppy-disk"></i>&nbsp;&nbsp;<span class="bold">Save Profile Picture</span></button>
+              
+                </div>
+                <button type="button" ng-click="removePic()" class="btn btn-primary btn-sm btn-block"  ng-disabled="user.image=='blankAva.jpg'" >
+                    <i class="glyphicon glyphicon-remove"></i>&nbsp;&nbsp;
+                    <span class="bold">Remove Profile Picture</span>
+                </button>
+
                     <div class="ibox-content profile-content">
                         <h4><strong>{{user.firstname}} {{user.lastname}}</strong></h4>
 
-                        <p><i class="fa fa-map-marker"></i>  {{user.email}}</p>
+                        <p><i class="fa fa-map-marker"></i>  {{user.billingAddress}}</p>
                         <h5>
                             About me
                         </h5>
@@ -61,9 +79,9 @@
                         <div class="feed-activity-list">
                             <form class="m-t" role="form" ng-submit=udpateProfile(user)>
                                 <p> UserName : </p>
-                                 <input type="text" class="form-control"  ng-model="user.username">
+                                 <input type="text" class="form-control"  ng-model="user.username" disabled required>
                                 <p> First Name : </p>
-                                <input type="text" class="form-control" ng-model="user.firstname">
+                                <input type="text" class="form-control" ng-model="user.firstname" required>
                                 <p> Last Name : </p> 
                                 <input type="text" class="form-control" required="" ng-model="user.lastname">                      
                                 <p> Email Address : </p> 
@@ -99,7 +117,7 @@
                                  <input type="password" class="form-control" required ng-model="changeUserPassword.password">
                                 <p> New Password : </p>
                                 <input type="password" class="form-control" required ng-model="changeUserPassword.newPasswordOne">
-                                <p> New Passwrod : </p> 
+                                <p> Confirm New Password : </p> 
                                 <input type="password" class="form-control" required ng-model="changeUserPassword.newPasswordTwo">    
                                 <p>
                                     <div class="user-button">

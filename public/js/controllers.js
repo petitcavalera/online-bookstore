@@ -3396,73 +3396,87 @@ function navController($scope, $rootScope, $http){
 }
 
 function topNavController($scope, $rootScope, $http, $location){
-  $scope.signout = function(){
-        $http.get('auth/signout');
-        $rootScope.authenticated = false;
-        $rootScope.current_user = '';
-        $location.path('/landing');
+    $scope.signout = function(){
+    $http.get('auth/signout');
+    $rootScope.authenticated = false;
+    $rootScope.current_user = '';
+    $location.path('/landing');
   };
 }
-function userController($scope, $rootScope,$location, $http){   
+function userController($scope, $rootScope,$location, $http, Upload){   
     if ($rootScope.authenticated){
-             $http.get("auth/getUser").then(function(result) {     
-              if(result.data != ''){
-                  $scope.user = result.data;                 
-              }else{
-                  $scope.authenticated = false;
-                  $scope.user = '';
-              }            
-        })
+        $http.get("auth/getUser").then(function(result) {     
+            if(result.data != ''){
+                $scope.user = result.data;                 
+            }else{
+                $scope.authenticated = false;
+                $scope.user = '';
+            }            
+         })
              
-             $scope.alerts = []; 
-        
-            $scope.closeAlert = function(index) {
-                $scope.alerts.splice(index, 1);
-            };
-        
-            $scope.udpateProfile = function (user){               
-             $http.put('/userProfile/'+ user._id,user).success(function(data){
-              if(data.state == 'success'){                
-                 $scope.alerts = []; 
-                 $scope.alerts.push({type:'success', msg:data.message});
-              }
-              else{
-                $scope.alerts = []; 
-                $scope.alerts.push({type:'danger', msg:data.message});
-                 
-              }
+        $scope.alerts = []; 
+            
+        $scope.closeAlert = function(index) {
+            $scope.alerts.splice(index, 1);
+        };
+            
+        $scope.udpateProfile = function (user){              
+            $http.put('/userProfile/'+ user._id,user).success(function(data){
+                if  (data.state == 'success'){                
+                    $scope.alerts = []; 
+                    $scope.alerts.push({type:'success', msg:data.message});
+                }
+                else{
+                    $scope.alerts = []; 
+                    $scope.alerts.push({type:'danger', msg:data.message});
+                }
             });
         }
-            
-            $scope.changePassword = function (changeUserPassword){               
-                if(changeUserPassword.newPasswordOne != changeUserPassword.newPasswordTwo){
-                    $scope.alerts = []; 
-                    $scope.alerts.push({type:'danger', msg:'Passwords do not match'});                    
-                } else if (changeUserPassword.newPasswordOne.length < 6){
-                    $scope.alerts = []; 
-                    $scope.alerts.push({type:'danger', msg:'Password must be minimun 6 characters'});  
-                }else{
-                     $http.put('/userProfile/changePassword/'+ $scope.user._id,changeUserPassword).success(function(data){
-                      if(data.state == 'success'){                
-                         $scope.alerts = []; 
-                         $scope.alerts.push({type:'success', msg:data.message});
-                      }
-                      else{
+                
+        $scope.changePassword = function (changeUserPassword){               
+            if  (changeUserPassword.newPasswordOne != changeUserPassword.newPasswordTwo){
+                $scope.alerts = []; 
+                $scope.alerts.push({type:'danger', msg:'Passwords do not match'});                    
+            } else if (changeUserPassword.newPasswordOne.length < 6){
+                $scope.alerts = []; 
+                $scope.alerts.push({type:'danger', msg:'Password must be minimun 6 characters'});  
+            }else{
+                $http.put('/userProfile/changePassword/'+ $scope.user._id,changeUserPassword).success(function(data){
+                    if(data.state == 'success'){                
+                        $scope.alerts = []; 
+                        $scope.alerts.push({type:'success', msg:data.message});
+                    } else {
                         $scope.alerts = []; 
                         $scope.alerts.push({type:'danger', msg:data.message});
-
-                      }
-                    
+                    }
+                })
+            }
+       }
+       $scope.upload = function (file) {
+            Upload.upload({
+                url: 'http://localhost:3000/userProfile/upload', //webAPI exposed to upload the file
+                data:{file:file} //pass file as data, should be user ng-model
+            }).then(function (resp) { //upload function returns a promise
+                if  (resp.data.error_code === 0){ //validate success
+                    $scope.progress ='Success ' + resp.config.data.file.name + ' uploaded.';
+                    $scope.user.image = resp.config.data.file.name;
+                    $scope.udpateProfile($scope.user);
+                } else {
+                    $scope.progress = 'an error occured';
                 }
-            )}
-            
-            }
-            
-            $scope.updateImage = function(file) {    
-                alert(file);            
-
-            }
-        
+            }, function (resp) { //catch error
+                console.log('Error status: ' + resp.status);                
+            }, function (evt) { 
+                console.log(evt);
+                var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+                $scope.progress = 'progress: ' + progressPercentage + '% '; // capture upload progress
+            });
+        };
+        $scope.removePic = function (user){ 
+            $scope.user.image = "blankAva.jpg";             
+            $scope.udpateProfile($scope.user);
+        }
     }
     else{
         $location.path('/login');

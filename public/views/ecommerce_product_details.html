@@ -20,8 +20,8 @@
                         <div class="col-md-5">
                             <slick dots="true">
                                 <div>
-                                    <div class="image-imitation">
-                                         <img ng-src="{{product.image}}"/>
+                                    <div class="image-imitation.xl">
+                                         <img ng-src="/img/products/{{product.image}}"/>
                                     </div>
                                 </div>
                             </slick>
@@ -50,17 +50,19 @@
                                 <dd>{{product.status}}</dd>
                                 <dt>Stock</dt>
                                 <dd>{{product.stock}}</dd>
-                            </dl>
+                            </dl>                  
                             <div>
                                 <div class="btn-group">
                                     <button class="btn btn-primary btn-sm"><i class="fa fa-cart-plus"></i> Add to cart</button>
                                     <button class="btn btn-white btn-sm"><i class="fa fa-star"></i> Add to wishlist </button>
-                                    <button class="btn btn-white btn-sm"><i class="fa fa-envelope"></i> Contact with author </button>
+                                    <button class="btn btn-white btn-sm"><i class="fa fa-envelope"></i> Contact with author </button></br></br>
                                 </div>
                             </div>
+                            <div>
+                                <button class="btn btn-primary btn-sm" ng-click="back()"><i class="glyphicon glyphicon-chevron-left"> </i>Back To Product Grid</button>
+                            </div>        
                         </div>
                     </div>
-
                 </div>
                 <div class="ibox-footer">
                 </div>

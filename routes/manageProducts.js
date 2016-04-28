@@ -8,7 +8,7 @@ var multer = require('multer');
 
 var storage = multer.diskStorage({ //multers disk storage settings
         destination: function (req, file, cb) {
-            cb(null, './uploads/')
+            cb(null, './public/img/products/')
         },
         filename: function (req, file, cb) {
             console.log(file);
@@ -96,7 +96,8 @@ router.route('/id/:id')
                 product.image = req.body.image;
                 product.price = req.body.price;
                 product.stock = req.body.stock;
-                product.status = req.body.status;     
+                product.status = req.body.status; 
+                product.image = "blankBook.jpg";     
                 product.save(function(err, product){
                     if(err)                        
                         res.send({state: 'failure', product:product, message: "Failed to update product"});

@@ -7,6 +7,20 @@ var bCrypt = require('bcrypt-nodejs');
 var multer = require('multer');
 var fs = require('fs');
 
+var storage = multer.diskStorage({ //multers disk storage settings
+        destination: function (req, file, cb) {
+            cb(null, './public/img/products/')
+        },
+        filename: function (req, file, cb) {
+            console.log(file);
+            var datetimestamp = Date.now();
+            cb(null, file.originalname)
+        }
+    });
+var upload = multer({ //multer settings
+                    storage: storage
+                }).single('file');
+
 //Used for routes that must be authenticated.
 function isAuthenticated (req, res, next) {
     // if user is authenticated in the session, call the next() to call the next request handler 
@@ -41,14 +55,12 @@ router.route('/:id')
     })   
     .put(function(req, res) {
            User.findById(req.param('id'), function(err, user){            
-                
                 user.username = req.body.username;
                 user.firstname = req.body.firstname;
                 user.lastname = req.body.lastname;
                 user.shippingAddress = req.body.shippingAddress;
                 user.billingAddress = req.body.billingAddress;
-                console.log(req.body.billingAddr);
-                console.log(user.BillingAddr);            
+                user.image = req.body.image;     
                 user.email = req.body.email;                       
                 user.save(function(err, user){
                     if(err)                        
@@ -82,25 +94,17 @@ router.route('/changePassword/:id')
         });
 
 router.route('/upload/')
-    .post(function(req, res) {      
-                       var data = new Buffer('');
-                          req.on('data', function(chunk) {
-                          data = Buffer.concat([data, chunk]);
-                       });
-                       req.on('end', function() {
-                              req.rawBody = data;     
-                              fs.writeFile(config.root + path.sep + 'public/upload' +                    path.sep + uuid.v1(), data ,function(err){
-                             if(err) throw err;
-                              console.log('ok saved')
-
-                       });
-                       res.send('ok');
-
-                    });
-              })
-
-
-   
+    .post(function(req, res) {
+        upload(req,res,function(err){
+            if(err){
+                 console.log(err);
+                 res.json({error_code:1,err_desc:err});
+                 return;
+            }
+             res.json({error_code:0,err_desc:null});
+        })
+       
+    })
 
     var isValidPassword = function(user, password){
         return bCrypt.compareSync(password, user.password);
