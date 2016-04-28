@@ -21,14 +21,14 @@
             <div class="ibox">
                 <div class="ibox-content product-box">
                     <div class="product-imitation.xl">
-                        <img ng-src="/img/products/{{item.image}}" height="240" width="246"/>
+                        <img style="height:250px;" class="img-responsive" ng-src="img/products/{{item.image}}" src="img/no-photo.png"/>
                     </div>
                     <div class="product-desc">
                     <span class="product-price">
                         {{item.price | currency}}
                     </span>
                     <small class="text-muted">{{item.category}}</small>
-                    <a ui-sref="commerce.edit_product({id : item._id})" class="product-name"> {{item.title}}</a>
+                    <a ui-sref="commerce.product_details({id : item._id})" class="product-name"> {{item.title}}</a>
                     <div class="small m-t-xs">
                         {{item.description | limitTo: 30}} ...
                     </div>
