@@ -96,8 +96,7 @@ router.route('/id/:id')
                 product.image = req.body.image;
                 product.price = req.body.price;
                 product.stock = req.body.stock;
-                product.status = req.body.status; 
-                product.image = "blankBook.jpg";     
+                product.status = req.body.status;  
                 product.save(function(err, product){
                     if(err)                        
                         res.send({state: 'failure', product:product, message: "Failed to update product"});
