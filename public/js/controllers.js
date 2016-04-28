@@ -3503,7 +3503,10 @@ function addProductController($scope, $rootScope, $http, $location, Upload){
         
         $scope.alerts = []; 
         $scope.addProduct = function(){
+            alert($scope.file);
+            if($scope.file != undefined){
             $scope.product.image = $scope.file.name;
+            }
             console.log($scope.product.image);
             $http.post("product/all", $scope.product).success(function(data, status){
                 $scope.alerts = []; 
