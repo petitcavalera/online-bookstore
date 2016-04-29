@@ -3551,8 +3551,7 @@ function addProductController($scope, $rootScope, $http, $location, Upload){
     if ($rootScope.authenticated){
         
         $scope.alerts = []; 
-        $scope.addProduct = function(){
-            alert($scope.file);
+        $scope.addProduct = function(){           
             if($scope.file != undefined){
             $scope.product.image = $scope.file.name;
             }
