@@ -16,8 +16,11 @@
 </div>
 
 <div class="wrapper wrapper-content animated fadeInRight" ng-controller="productController">
+    <div class="form-group">                 
+            <input type="text" style="height:50px;" ng-keyup="search(searchText)" ng-model="searchText" id="search_product" name="search_product" value="" placeholder="Search your favourite books by title or author here ..." class="form-control">
+    </div>
     <div class="row">
-        <div class="col-md-3" ng-repeat="item in product | orderBy:'-created_at' | startFrom: getStartFrom() | limitTo:pageSize">
+        <div class="col-md-3" ng-repeat-start="item in products | orderBy:'-created_at'">
             <div class="ibox">
                 <div class="ibox-content product-box">
                     <div class="product-imitation.xl">
@@ -39,12 +42,15 @@
                 </div>
             </div>
         </div>
+        <div ng-repeat-end=""></div>
     </div>
-    <button class="btn btn-primary m-t-n-xs" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
+     <uib-pagination boundary-links="true" ng-change="pageChanged()" items-per-page="itemsPerPage" total-items="totalItems" ng-model="currentPage" class="pagination-sm"  previous-text="&lsaquo;" next-text="&rsaquo;" first-text="&laquo;" last-text="&raquo;"></uib-pagination>
+
+ <!--   <button class="btn btn-primary m-t-n-xs" ng-disabled="currentPage == 0" ng-click="currentPage=currentPage-1">
         Previous
     </button>
     {{currentPage+1}}/{{numberOfPages()}}
     <button class="btn btn-primary m-t-n-xs" ng-disabled="currentPage >= product.length/pageSize - 1" ng-click="currentPage=currentPage+1">
         Next
-    </button>
+    </button> -->
 </div>

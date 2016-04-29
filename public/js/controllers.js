@@ -3484,22 +3484,57 @@ function userController($scope, $rootScope,$location, $http, Upload){
 }
 
 function productController($scope, $rootScope, $location, $http){
-    $http.get("product/all").then(function(result) {     
-        if(result.data != ''){
-            $scope.currentPage = 0;
-            /*set the total maximum product grid in one page here */
-            $scope.pageSize = 8;
-            $scope.product = result.data;
-            $scope.numberOfPages=function(){
-                return Math.ceil($scope.product.length/$scope.pageSize);                
-            }
-        }else{
-            $scope.authenticated = false;
-            $scope.product = '';
-        }
-    });
-    $scope.getStartFrom = function (){
-        return ($scope.currentPage * $scope.pageSize);
+    if($rootScope.totalItems != undefined){
+        $scope.totalItems = $rootScope.totalItems;
+    }else{
+        $scope.totalItems = 0;
+    };
+    if($rootScope.currentPage != undefined){
+        $scope.currentPage = $rootScope.currentPage;
+    }else{
+        $scope.currentPage = 1;
+    };
+    if($rootScope.itemsPerPage != undefined){
+        $scope.itemsPerPage = $rootScope.itemsPerPage;
+    }else{
+        $scope.itemsPerPage = 8;
+    };
+    if ($rootScope.searchText != undefined){
+        $scope.searchText = $rootScope.searchText;
+    }else{
+        $scope.searchText = '';
+    };
+    $scope.setRoot = function (){
+        $rootScope.totalItems = $scope.totalItems;
+        $rootScope.currentPage = $scope.currentPage;
+        $rootScope.itemsPerPage = $scope.itemsPerPage;
+        $rootScope.searchText =  $scope.searchText;
+    };
+    var parameters = { searchText: $scope.searchText, limit:$scope.itemsPerPage, skip:($scope.currentPage -1 )*  $scope.itemsPerPage};
+    $.get( 'product/search',parameters, function(result) {
+        $scope.products = result.data; 
+        $scope.totalItems = result.items;             
+        $scope.setRoot();
+        });
+    
+    $scope.pageChanged = function() {
+        var parameters = { searchText: $scope.searchText, limit:$scope.itemsPerPage, skip:($scope.currentPage -1 )*  $scope.itemsPerPage};
+        $.get( 'product/search',parameters, function(result) {                         
+            $scope.products = result.data; 
+            $scope.$apply();
+            $scope.setRoot();
+        });
+    };
+    
+    $scope.search = function(searchText){
+        var parameters = { searchText: searchText, limit:$scope.itemsPerPage, skip:($scope.currentPage -1 )*  $scope.itemsPerPage};
+        $.get( 'product/search',parameters, function(result) {
+            $scope.products = result.data;
+            $scope.totalItems = result.items;  
+            console.log(result.items);
+            $scope.$apply();
+            $scope.setRoot();
+        });
     }
 }
 function productItemController($scope, $stateParams, $http, $location){
@@ -3629,6 +3664,7 @@ function manageProductController($scope, $rootScope,$location, $http){
      if ($scope.authenticated == true){
          
           // pagination
+         $scope.searchText = '';
          $scope.totalItems = 0;
          $scope.currentPage = 1;
          $scope.itemsPerPage = 10;
