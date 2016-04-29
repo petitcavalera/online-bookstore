@@ -3537,9 +3537,6 @@ function productController($scope, $rootScope, $location, $http){
             $scope.setRoot();
         });
     }
-    $scope.isActive = function(item) {
-        return item.status === "Inactive";
-    };
 }
 function productItemController($scope, $stateParams, $http, $location){
     $http.get("product/id/"+ $stateParams.id).then(function(result) {     
