@@ -3511,15 +3511,16 @@ function productController($scope, $rootScope, $location, $http){
         $rootScope.searchText =  $scope.searchText;
     };
     var parameters = { searchText: $scope.searchText, limit:$scope.itemsPerPage, skip:($scope.currentPage -1 )*  $scope.itemsPerPage};
-    $.get( 'product/search',parameters, function(result) {
+    $.get( 'product/searchGrid',parameters, function(result) {
         $scope.products = result.data; 
-        $scope.totalItems = result.items;             
+        $scope.totalItems = result.items;
+        $scope.$apply()             
         $scope.setRoot();
         });
     
     $scope.pageChanged = function() {
         var parameters = { searchText: $scope.searchText, limit:$scope.itemsPerPage, skip:($scope.currentPage -1 )*  $scope.itemsPerPage};
-        $.get( 'product/search',parameters, function(result) {                         
+        $.get( 'product/searchGrid',parameters, function(result) {                         
             $scope.products = result.data; 
             $scope.$apply();
             $scope.setRoot();
@@ -3528,7 +3529,7 @@ function productController($scope, $rootScope, $location, $http){
     
     $scope.search = function(searchText){
         var parameters = { searchText: searchText, limit:$scope.itemsPerPage, skip:($scope.currentPage -1 )*  $scope.itemsPerPage};
-        $.get( 'product/search',parameters, function(result) {
+        $.get( 'product/searchGrid',parameters, function(result) {
             $scope.products = result.data;
             $scope.totalItems = result.items;  
             console.log(result.items);
@@ -3536,6 +3537,9 @@ function productController($scope, $rootScope, $location, $http){
             $scope.setRoot();
         });
     }
+    $scope.isActive = function(item) {
+        return item.status === "Inactive";
+    };
 }
 function productItemController($scope, $stateParams, $http, $location){
     $http.get("product/id/"+ $stateParams.id).then(function(result) {     

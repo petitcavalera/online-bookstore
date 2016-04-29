@@ -119,6 +119,20 @@ router.route('/search/')
         });
     
        })
+       
+router.route('/searchGrid/')
+    .get(function(req, res){
+        var regex = new RegExp(req.query.searchText, "i");
+        var limit = parseInt(req.query.limit);
+        var skip = parseInt(req.query.skip);          
+        Product.find( {$and:[{ $or:[ {'title':regex}, {'description':regex} ]},{'status':'Active'}]},null,{limit: limit , skip: skip}).exec(function(err, products){
+            Product.find( {$and:[{ $or:[ {'title':regex}, {'description':regex} ]},{'status':'Active'}]}).count().exec(function(err, count){
+                res.send({data: products, items:count})
+            })
+        });
+    
+       })
+
 router.route('/upload/')
     .post(function(req, res) {
         upload(req,res,function(err){

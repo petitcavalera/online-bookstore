@@ -17,14 +17,14 @@
 
 <div class="wrapper wrapper-content animated fadeInRight" ng-controller="productController">
     <div class="form-group">                 
-            <input type="text" style="height:50px;" ng-keyup="search(searchText)" ng-model="searchText" id="search_product" name="search_product" value="" placeholder="Search your favourite books by title or author here ..." class="form-control">
+            <input type="text" style="height:50px;" ng-keyup="search(searchText)" ng-model="searchText" id="search_product" name="search_product" value="" placeholder="Search your favourite books by title or description here ..." class="form-control">
     </div>
     <div class="row">
         <div class="col-md-3" ng-repeat-start="item in products | orderBy:'-created_at'">
             <div class="ibox">
                 <div class="ibox-content product-box">
                     <div class="product-imitation.xl">
-                        <img style="height:250px;" class="img-responsive" ng-src="img/products/{{item.image}}" src="img/no-photo.png"/>
+                        <a ui-sref="commerce.product_details({id : item._id})"> <img style="height:250px;" class="img-responsive" ng-src="img/products/{{item.image}}" src="img/no-photo.png"/></a>
                     </div>
                     <div class="product-desc">
                     <span class="product-price">
