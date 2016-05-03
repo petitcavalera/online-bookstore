@@ -1,3 +1,9 @@
+<style type="text/css">
+   .row .ng-scope{
+       /* height: 800px;
+    }
+</style>
+
 <div class="row wrapper border-bottom white-bg page-heading">
     <div class="col-sm-4">
         <h2>Products</h2>
@@ -11,7 +17,7 @@
         </ol>
     </div>
 </div>
-<div class="row" ng-controller="editProductController">
+<div class="row" ng-controller="editProductController" style="height: 900px;">
     <div class="col-lg-12">
         <div class="wrapper wrapper-content">
             <div class="tabs-container">
@@ -19,7 +25,7 @@
                     <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert>     
                 </div>
                 <h3 class="font-bold">Enter new product details</h3>   
-                <div class="col-md-8">
+                <div class="col-md-6">
                     <form class="form-horizontal" ng-submit="updateProduct()">
                         <br/>
                         <div class="form-group"><label class="col-sm-2 control-label">Book Title</label>
@@ -84,20 +90,19 @@
                         </div>
                     </form>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-6">
                     <div class="ibox-content no-padding border-left-right">
-                        <img alt="image" class="img-responsive" ng-src="img/products/{{product.image}}" src="img/no-photo.png"> 
-                        <input 
-                               type="file" 
-                               ngf-select 
-                               ng-model="file" 
-                               name="file" 
-                               ngf-pattern="'image/*'"
-                               accept="image/*" 
-                               ngf-max-size="20MB" 
-                               class="btn btn-primary btn-sm btn-block"
-                               />
-                         <button type="button" ng-click="changePicture(file)" class="btn btn-primary btn-sm btn-block">Change Picture</button>
+                        <img alt="image" class="img-responsive" ng-src="img/products/{{primaryImage}}" src="img/no-photo.png"> 
+                       <div class="ibox-content no-padding border-left-right">                        
+                       <button ngf-select="changePicture($files)" multiple accept="image/*">Select Images</button>                       
+                    </div>
+                        <br />
+                    <p>Uploaded Images (Maximum 4 images) *Click on the image to make it primary</p>
+                    
+                    <div ng-repeat="image in product.images" class="col-md-3">
+                     <img alt="image" ng-click="setToPrimary()"  style="height:150px; width:110px; margin-bottom: 20px;  cursor: pointer; " ng-src="img/products/{{image.image}}" src="img/no-photo.png"> 
+                        <button ng-click="removeImage()" type="button" class="btn btn-default btn-xs">Delete</button>
+                    </div>
                     </div>
                 </div>
             </div>

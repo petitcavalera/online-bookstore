@@ -3483,7 +3483,8 @@ function userController($scope, $rootScope,$location, $http, Upload){
     };
 }
 
-function productController($scope, $rootScope, $location, $http){
+function productController($scope, $rootScope, $location, $http, $state){
+    alert($state.params);
     if($rootScope.totalItems != undefined){
         $scope.totalItems = $rootScope.totalItems;
     }else{
@@ -3512,11 +3513,13 @@ function productController($scope, $rootScope, $location, $http){
         $rootScope.catFilter = $scope.catFilter;
         $rootScope.sortItem = $scope.sortItem;
     };
+    
     var parameters = { searchText: $scope.searchText, limit:$scope.itemsPerPage, skip:($scope.currentPage -1 )*  $scope.itemsPerPage, cat: $scope.catFilter, sortItem: $scope.sortItem};
+
     $.get( 'product/searchGrid',parameters, function(result) {
         $scope.products = result.data; 
         $scope.totalItems = result.items;
-        $scope.$apply()             
+        $scope.$apply()    
         $scope.setRoot();
         });
     
@@ -3554,12 +3557,15 @@ function addProductController($scope, $rootScope, $http, $location, Upload){
     if ($rootScope.authenticated){
         
         $scope.alerts = []; 
+        $scope.product = {};
+        $scope.product.images = [];
         $scope.addProduct = function(){           
             if($scope.file != undefined){
-            $scope.product.image = $scope.file.name;
+            //$scope.product.image = $scope.file.name;
             }
-            console.log($scope.product.image);
-            $http.post("product/all", $scope.product).success(function(data, status){
+            alert( $scope.product.images);            
+            console.log($scope.product.images);
+            $http.post("product/all",  JSON.stringify($scope.product)).success(function(data, status){
                 $scope.alerts = []; 
                 $scope.alerts.push({type:'success', msg:'New product has been successfully added into database'});               
                 $scope.product = '';
@@ -3577,23 +3583,38 @@ function addProductController($scope, $rootScope, $http, $location, Upload){
         
         
         $scope.upload = function (file) {
-            Upload.upload({
-                url: 'http://localhost:3000/product/upload', //webAPI exposed to upload the file
-                data:{file:file} //pass file as data, should be user ng-model
-            }).then(function (resp) { //upload function returns a promise
-                if(resp.data.error_code === 0){ //validate success
-                    $scope.progress ='Success ' + resp.config.data.file.name + ' uploaded.';
-                } else {
-                    $scope.progress = 'an error occured';
-                }
-            }, function (resp) { //catch error
-                console.log('Error status: ' + resp.status);                
-            }, function (evt) { 
-                console.log(evt);
-                var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-                $scope.progress = 'progress: ' + progressPercentage + '% '; // capture upload progress
-            });
+            if(file.length + $scope.product.images.length > 4){
+                 $scope.alerts = []; 
+                $scope.alerts.push({type:'danger', msg:"Maximum 4 Images Upload"});    
+            }else {
+                Upload.upload({
+                    url: 'http://localhost:3000/product/upload', //webAPI exposed to upload the file
+                    arrayKey: '', 
+                    data:{file:file} //pass file as data, should be user ng-model
+                }).then(function (resp) { //upload function returns a promise
+                    if(resp.data.error_code === 0){ //validate success
+                        resp.config.data.file.forEach(function(file, i){
+                            console.log(i +" "+file.name);
+                            var primary = false;
+                            if(i === 0){
+                                var primary = true;
+                                }
+                             $scope.product.images.push({'image':file.name, 'primary' : primary});
+                        })
+                        //console.log('Success ' + resp.config.data.file[0].name);
+                        $scope.progress ='Success ' + resp.config.data.file.name + ' uploaded.';
+                    } else {
+                        $scope.progress = 'an error occured';
+                    }
+                }, function (resp) { //catch error
+                    console.log('Error status: ' + resp.status);                
+                }, function (evt) { 
+                    console.log(evt);
+                    var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                    console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+                    $scope.progress = 'progress: ' + progressPercentage + '% '; // capture upload progress
+                });
+            }
         };
         
     }else{
@@ -3607,6 +3628,15 @@ function editProductController($scope, $rootScope, $http, $location, $stateParam
         $http.get("product/id/"+ $stateParams.id).then(function(result) {     
             if(result.data != ''){
                 $scope.product = result.data;
+                
+                var primary = $.grep($scope.product.images, function(e){ return e.primary == true; });
+                
+                if (primary.length == 1) {
+                    $scope.primaryImage = primary[0].image;
+                }  else{
+                     $scope.primaryImage = "no-photo.png";
+                }            
+                
             }else{
                 $scope.product = '';
             }
@@ -3617,7 +3647,18 @@ function editProductController($scope, $rootScope, $http, $location, $stateParam
         function updateProduct(){
             $http.put("product/id/"+ $stateParams.id,$scope.product).success(function(data, status){                 
                 $scope.alerts = [];
-                $scope.alerts.push({type:'success', msg:'Product has been successfully updated'});                    
+                $scope.alerts.push({type:'success', msg:'Product has been successfully updated'}); 
+                
+                $scope.product = data.product;
+                
+                var primary = $.grep($scope.product.images, function(e){ return e.primary == true; });
+                
+                if (primary.length == 1) {
+                    $scope.primaryImage = primary[0].image;
+                } else{
+                      $scope.primaryImage = "no-photo.png";
+                }  
+                
             })
             .error(function(data,status,header,config){
                 $scope.alerts = []; 
@@ -3629,26 +3670,62 @@ function editProductController($scope, $rootScope, $http, $location, $stateParam
                 $scope.alerts.splice(index, 1);
         };
         
-        $scope.changePicture = function (file) {
-            Upload.upload({
-                url: 'http://localhost:3000/product/upload', //webAPI exposed to upload the file
-                data:{file:file} //pass file as data, should be user ng-model
-            }).then(function (resp) { //upload function returns a promise
-                if(resp.data.error_code === 0){ //validate success
-                    $scope.product.image = resp.config.data.file.name;   
-                    $scope.updateProduct();
-                } else {
-                    $scope.progress = 'an error occured';
-                }
-            }, function (resp) { //catch error
-                console.log('Error status: ' + resp.status);                
-            }, function (evt) { 
-                console.log(evt);
-                var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
-                console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
-                $scope.progress = 'progress: ' + progressPercentage + '% '; // capture upload progress
-            });
+        $scope.changePicture = function (file) {   
+            if(file.length + $scope.product.images.length > 4){
+                 $scope.alerts = []; 
+                $scope.alerts.push({type:'danger', msg:"Maximum 4 Images Upload"});    
+            }else {
+                Upload.upload({
+                    url: 'http://localhost:3000/product/upload', //webAPI exposed to upload the file
+                    arrayKey: '', 
+                    data:{file:file} //pass file as data, should be user ng-model
+                }).then(function (resp) { //upload function returns a promise
+                    if(resp.data.error_code === 0){ //validate success
+                        resp.config.data.file.forEach(function(file, i){                        
+                             $scope.product.images.push({'image':file.name, 'primary' : false});
+                        })
+                        $scope.product.image = resp.config.data.file.name;   
+                        $scope.updateProduct();
+                    } else {
+                        $scope.progress = 'an error occured';
+                    }
+                }, function (resp) { //catch error
+                    console.log('Error status: ' + resp.status);                
+                }, function (evt) { 
+                    console.log(evt);
+                    var progressPercentage = parseInt(100.0 * evt.loaded / evt.total);
+                    console.log('progress: ' + progressPercentage + '% ' + evt.config.data.file.name);
+                    $scope.progress = 'progress: ' + progressPercentage + '% '; // capture upload progress
+                });
+            }
         };
+        
+        $scope.setToPrimary = function (){
+            var imageId = this.image._id;
+            for (var i = 0 ; i < $scope.product.images.length ; i++ ){
+                
+                 if($scope.product.images[i].primary == true && $scope.product.images[i]._id != imageId){
+                    $scope.product.images[i].primary = false;
+                }
+                
+                if($scope.product.images[i]._id == imageId){                   
+                    $scope.product.images[i].primary = true;
+                }
+            }
+            
+             $scope.updateProduct();
+        }
+        
+        $scope.removeImage = function(){
+             var imageId = this.image._id;
+            for (var i = 0 ; i < $scope.product.images.length ; i++ ){
+                 if($scope.product.images[i]._id == imageId){                   
+                    $scope.product.images.splice(i, 1)
+                }
+            }
+            
+             $scope.updateProduct();
+        }
         
     }else{
         $location.path("/login");
@@ -3674,7 +3751,8 @@ function manageProductController($scope, $rootScope,$location, $http){
           var parameters = { searchText: $scope.searchText, limit:$scope.itemsPerPage, skip:($scope.currentPage -1 )*  $scope.itemsPerPage};
           $.get( 'product/search',parameters, function(result) {  
                 $scope.products = result.data; 
-                $scope.totalItems = result.items;             
+                $scope.totalItems = result.items;    
+                $scope.$apply();
              });
           
          $scope.pageChanged = function() {
