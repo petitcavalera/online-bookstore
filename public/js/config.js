@@ -1106,7 +1106,7 @@ function config($stateProvider, $urlRouterProvider, $ocLazyLoadProvider, IdlePro
             }
         })
         .state('commerce.products_grid', {
-            url: "/products_grid",
+            url: "/products_grid/:cat",
             templateUrl: "views/ecommerce_products_grid.html",
             data: { pageTitle: 'Books' }
         })

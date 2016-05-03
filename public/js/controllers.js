@@ -3341,14 +3341,14 @@ function authController($scope, $http, $rootScope, $location){
     $scope.user = {username:'',password:'',confirmPassword:'',email:'',firstName:'',lastName:'',agree:false};
     $scope.error_message = '';
     if ($rootScope.authenticated){
-        $location.path('/commerce/products_grid');
+        $location.path('/commerce/products_grid/All');
     }else{
         $scope.login = function(){
             $http.post('/auth/login', $scope.user).success(function(data){
             if(data.state == 'success'){
                 $rootScope.authenticated = true;
                 $rootScope.current_user = data.user.username;
-                $location.path('/commerce/products_grid');
+                $location.path('/commerce/products_grid/All');
             }
             else{
                 $scope.error_message = data.message;
@@ -3370,7 +3370,7 @@ function authController($scope, $http, $rootScope, $location){
                 alert(data.state);
                 $rootScope.authenticated = true;
                 $rootScope.current_user = data.user.username;
-                $location.path('/commerce/products_grid');
+                $location.path('/commerce/products_grid/All');
               }
               else{        
                 $scope.error_message = data.message;
@@ -3483,11 +3483,47 @@ function userController($scope, $rootScope,$location, $http, Upload){
     };
 }
 
-function productController($scope, $rootScope, $location, $http){
-    if($rootScope.totalItems != undefined){
-        $scope.totalItems = $rootScope.totalItems;
+function productController($scope, $rootScope, $location, $http, $stateParams){
+    
+    //<-- arrived from navigation bar or landing page or back from product detail. set the $stateParams value.
+    var category='All';
+    if ($stateParams.cat != ''){
+        category = $stateParams.cat;
+        $rootScope.searchText = '';
+        $rootScope.sortItem = '';
+    }else {
+        if ($rootScope.catFilter != '' ){
+            category = $rootScope.catFilter;
+        }
+    };
+    switch (category){
+        case 'History': 
+            $scope.catFilter = 'History';
+            break;
+        case 'Children Books':
+            $scope.catFilter = 'Children Books';
+            break;
+        case 'Cooking & Food':
+            $scope.catFilter = 'Cooking & Food';
+            break;
+        case 'Fiction':
+            $scope.catFilter = 'Fiction';
+            break;
+        case 'Science & Technology':
+            $scope.catFilter = 'Science & Technology';
+            break;
+        case 'Uncategorized':
+            $scope.catFilter = 'Uncategorized';
+            break;
+        default:
+            $scope.catFilter ='';
+    }
+    // end here -->
+    
+    if ($rootScope.totalItems != undefined){
+        $scope.totalItems = $rootScope.totalItems   
     }else{
-        $scope.totalItems = 0;
+        $scope.totalItems = 0;  
     };
     if($rootScope.currentPage != undefined){
         $scope.currentPage = $rootScope.currentPage;
