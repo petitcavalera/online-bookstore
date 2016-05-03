@@ -18,7 +18,8 @@
                  <div>
                     <uib-alert ng-repeat="alert in alerts" type="{{alert.type}}" close="closeAlert($index)">{{alert.msg}}</uib-alert>     
                 </div>
-                <h3 class="font-bold">Enter new product details</h3>                    
+                <h3 class="font-bold">Enter new product details</h3>  
+                 <div class="col-md-6">
                     <form class="form-horizontal" ng-submit="addProduct()">
                         <br/>
                         <div class="form-group"><label class="col-sm-2 control-label">Book Title</label>
@@ -49,23 +50,7 @@
                                 <textarea rows="5" cols="5" type="text" placeholder="Description" class="form-control" required ng-model="product.description">
                                 </textarea>
                             </div>
-                        </div>
-                        <div class="form-group"><label class="col-sm-2 control-label">Image</label>
-                            <div class="col-sm-10">                                                            
-                            <input 
-                               type="file" 
-                               ngf-select 
-                               ng-model="file" 
-                               name="file" 
-                               ngf-pattern="'image/*'"
-                               accept="image/*" 
-                               ngf-max-size="20MB" 
-                               />
-                            Image thumbnail: <img style="width:100px;" ngf-thumbnail="file"/>    
-                            <button type="button" ng-click="upload(file)">upload image</button>
-                            <p>{{progress}}</p>                   
-                            </div>
-                        </div>
+                        </div>                      
                         <div class="form-group"><label class="col-sm-2 control-label">Price</label>
                             <div class="col-sm-10">
                                 <input type="number" min="0" ng-pattern="/^[0-9]+(\.[0-9]{1,2})?$/" step="0.01" placeholder="Price ($ 1.00)" class="form-control" required ng-model="product.price">
@@ -93,6 +78,20 @@
                             </div>
                         </div>
                     </form>
+                </div>   
+                <div class="col-md-6">
+                    <div class="ibox-content no-padding border-left-right">                        
+                       <button ngf-select="upload($files)" multiple accept="image/*">Select Images</button>                       
+                    </div>
+                    <br />
+                    
+                    <p>Uploaded Images (Maximum 4 images)</p>
+                    
+                    <div ng-repeat="image in product.images" class="col-md-3">
+                     <img alt="image"  style="height:150px; width:110px; margin-bottom: 20px;" ng-src="img/products/{{image.image}}" src="img/no-photo.png"> 
+                    </div>
+                    
+                </div>
             </div>
         </div>
     </div>

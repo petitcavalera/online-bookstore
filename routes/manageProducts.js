@@ -18,7 +18,7 @@ var storage = multer.diskStorage({ //multers disk storage settings
     });
 var upload = multer({ //multer settings
                     storage: storage
-                }).single('file');
+                }).array('file',4);
 
 //Used for routes that must be authenticated.
 function isAuthenticated (req, res, next) {
@@ -44,13 +44,13 @@ router.use('/', isAuthenticated);
 router.route('/all/')
 	//creates a new post
 	.post(function(req, res){
-        console.log(req.body.image);
+        console.log(req.body.images);
 		var product = new Product();
         product.title = req.body.title;
         product.author = req.body.author;
         product.description = req.body.description;
         product.category = req.body.category;
-        product.image = req.body.image;
+        product.images = req.body.images;
         product.price = req.body.price;
         product.stock = req.body.stock;
         product.status = req.body.status;
@@ -93,7 +93,7 @@ router.route('/id/:id')
                 product.author = req.body.author;
                 product.description = req.body.description;
                 product.category = req.body.category;
-                product.image = req.body.image;
+                product.images = req.body.images;
                 product.price = req.body.price;
                 product.stock = req.body.stock;
                 product.status = req.body.status;  
