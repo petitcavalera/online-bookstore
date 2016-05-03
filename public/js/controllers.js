@@ -3509,8 +3509,10 @@ function productController($scope, $rootScope, $location, $http){
         $rootScope.currentPage = $scope.currentPage;
         $rootScope.itemsPerPage = $scope.itemsPerPage;
         $rootScope.searchText =  $scope.searchText;
+        $rootScope.catFilter = $scope.catFilter;
+        $rootScope.sortItem = $scope.sortItem;
     };
-    var parameters = { searchText: $scope.searchText, limit:$scope.itemsPerPage, skip:($scope.currentPage -1 )*  $scope.itemsPerPage};
+    var parameters = { searchText: $scope.searchText, limit:$scope.itemsPerPage, skip:($scope.currentPage -1 )*  $scope.itemsPerPage, cat: $scope.catFilter, sortItem: $scope.sortItem};
     $.get( 'product/searchGrid',parameters, function(result) {
         $scope.products = result.data; 
         $scope.totalItems = result.items;
@@ -3519,7 +3521,7 @@ function productController($scope, $rootScope, $location, $http){
         });
     
     $scope.pageChanged = function() {
-        var parameters = { searchText: $scope.searchText, limit:$scope.itemsPerPage, skip:($scope.currentPage -1 )*  $scope.itemsPerPage};
+        var parameters = { searchText: $scope.searchText, limit:$scope.itemsPerPage, skip:($scope.currentPage -1 )*  $scope.itemsPerPage, cat: $scope.catFilter, sortItem: $scope.sortItem};
         $.get( 'product/searchGrid',parameters, function(result) {                         
             $scope.products = result.data; 
             $scope.$apply();
@@ -3527,8 +3529,8 @@ function productController($scope, $rootScope, $location, $http){
         });
     };
     
-    $scope.search = function(searchText){
-        var parameters = { searchText: searchText, limit:$scope.itemsPerPage, skip:($scope.currentPage -1 )*  $scope.itemsPerPage};
+    $scope.search = function(searchText,cat,sortItem){
+        var parameters = { searchText: searchText, limit:$scope.itemsPerPage, skip:($scope.currentPage -1 )*  $scope.itemsPerPage, cat: $scope.catFilter, sortItem: $scope.sortItem};
         $.get( 'product/searchGrid',parameters, function(result) {
             $scope.products = result.data;
             $scope.totalItems = result.items;  
