@@ -11,7 +11,9 @@
         'ngIdle',                       // Idle timer
         'ngSanitize',
         'ngFileUpload',// ngSanitize
-        'ngTextTruncate'
+        'ngTextTruncate',
+        'ngMessages'       
+
             ])
 })();
 

@@ -54,6 +54,7 @@ router.route('/all/')
         product.price = req.body.price;
         product.stock = req.body.stock;
         product.status = req.body.status;
+        product.ISBN = req.body.ISBN;
 		product.save(function(err, post) {
 			if (err){
                 console.log(err);
@@ -88,7 +89,8 @@ router.route('/id/:id')
     })
     .put(function(req, res) {
            Product.findById(req.param('id'), function(err, product){            
-                console.log('updateProductsById-1');  
+                console.log('updateProductsById-1');
+                console.log(req.body.ISBN);
                 product.title = req.body.title;
                 product.author = req.body.author;
                 product.description = req.body.description;
@@ -97,6 +99,7 @@ router.route('/id/:id')
                 product.price = req.body.price;
                 product.stock = req.body.stock;
                 product.status = req.body.status;  
+                product.ISBN = req.body.ISBN;
                 product.save(function(err, product){
                     if(err)                        
                         res.send({state: 'failure', product:product, message: "Failed to update product"});

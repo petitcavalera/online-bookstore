@@ -11,7 +11,8 @@ var productSchema = new mongoose.Schema({
     images: [{image :String, primary: Boolean}],
     price: Number,
     stock: Number,
-    status: String,   
+    status: String,  
+    ISBN: Number,
     created_at: {type: Date, default: Date.now}
 });
 

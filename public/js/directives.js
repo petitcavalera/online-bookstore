@@ -564,6 +564,24 @@ function markdownEditor() {
     }
 };
 
+function isbn() {
+    return {
+        restrict: "A",
+         
+        require: "?ngModel",
+         
+        link: function(scope, element, attributes, ngModel) {
+            ngModel.$validators.isbn = function(modelValue) {  
+               if(modelValue != undefined && (modelValue.toString().length == 10 || modelValue.toString().length == 13 )){
+                   return true;
+               }else{
+                   return false;
+               }
+            }
+        }
+    };
+}
+
 /**
  *
  * Pass all functions into module
@@ -592,3 +610,4 @@ angular
     .directive('truncate', truncate)
     .directive('touchSpin', touchSpin)
     .directive('markdownEditor', markdownEditor)
+    .directive('isbn',isbn)

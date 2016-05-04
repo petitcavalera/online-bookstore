@@ -79,7 +79,9 @@
                             </td>
                         </tr>     
                         <tr ng-repeat-end>
-                            <td>  <img alt="image" style="height:150px; width:110px; margin-bottom: 20px;" ng-src="img/products/{{product.image}}" src="img/no-photo.png"> </td>
+                            <td> 
+                                <img ng-show="!(product.images | filter : {primary : true}).length"  alt="image" style="height:150px; width:110px; margin-bottom: 20px;"  src="img/no-photo.png">
+                                <img ng-repeat="image in product.images | filter : {primary : true}" alt="image" style="height:150px; width:110px; margin-bottom: 20px;" ng-src="img/products/{{image.image }}" src="img/no-photo.png"> </td>
                             <td colspan="6">
                                 <p ng-text-truncate="product.description" ng-tt-words-threshold="50"></p>
                             </td>

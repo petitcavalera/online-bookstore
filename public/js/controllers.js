@@ -3483,6 +3483,7 @@ function userController($scope, $rootScope,$location, $http, Upload){
     };
 }
 
+
 function productController($scope, $rootScope, $location, $http, $stateParams){
     
     //<-- arrived from navigation bar or landing page or back from product detail. set the $stateParams value.
@@ -3521,7 +3522,7 @@ function productController($scope, $rootScope, $location, $http, $stateParams){
     // end here -->
     
     if ($rootScope.totalItems != undefined){
-        $scope.totalItems = $rootScope.totalItems   
+        $scope.totalItems = $rootScope.totalItems    
     }else{
         $scope.totalItems = 0;  
     };
@@ -3602,22 +3603,23 @@ function addProductController($scope, $rootScope, $http, $location, Upload){
         $scope.alerts = []; 
         $scope.product = {};
         $scope.product.images = [];
-        $scope.addProduct = function(){           
-            if($scope.file != undefined){
-            //$scope.product.image = $scope.file.name;
-            }
-            alert( $scope.product.images);            
-            console.log($scope.product.images);
-            $http.post("product/all",  JSON.stringify($scope.product)).success(function(data, status){
-                $scope.alerts = []; 
-                $scope.alerts.push({type:'success', msg:'New product has been successfully added into database'});               
-                $scope.product = '';
-                $location.path('/commerce/add_product');
-            })
-            .error(function(data,status,header,config){
-                $scope.alerts = []; 
-                $scope.alerts.push({type:'danger', msg:"http error: "+ status});               
-            });
+        $scope.addProduct = function(isValid){    
+          if(isValid)  {
+                if($scope.file != undefined){
+                //$scope.product.image = $scope.file.name;
+                }                    
+                console.log($scope.product.images);
+                $http.post("product/all",  JSON.stringify($scope.product)).success(function(data, status){
+                    $scope.alerts = []; 
+                    $scope.alerts.push({type:'success', msg:'New product has been successfully added into database'});              $scope.submitted = false;
+                    $scope.product = '';
+                    $location.path('/commerce/add_product');
+                })
+                .error(function(data,status,header,config){
+                    $scope.alerts = []; 
+                    $scope.alerts.push({type:'danger', msg:"http error: "+ status});               
+                });
+          }
         };
         $scope.closeAlert = function(index) {
                 $scope.alerts.splice(index, 1);
@@ -3687,26 +3689,28 @@ function editProductController($scope, $rootScope, $http, $location, $stateParam
 
         $scope.updateProduct = updateProduct;
         
-        function updateProduct(){
-            $http.put("product/id/"+ $stateParams.id,$scope.product).success(function(data, status){                 
-                $scope.alerts = [];
-                $scope.alerts.push({type:'success', msg:'Product has been successfully updated'}); 
-                
-                $scope.product = data.product;
-                
-                var primary = $.grep($scope.product.images, function(e){ return e.primary == true; });
-                
-                if (primary.length == 1) {
-                    $scope.primaryImage = primary[0].image;
-                } else{
-                      $scope.primaryImage = "no-photo.png";
-                }  
-                
-            })
-            .error(function(data,status,header,config){
-                $scope.alerts = []; 
-                $scope.alerts.push({type:'danger', msg:"http error: "+ status});     
-            });
+        function updateProduct(isValid){
+            if(isValid){
+                $http.put("product/id/"+ $stateParams.id,$scope.product).success(function(data, status){                 
+                    $scope.alerts = [];
+                    $scope.alerts.push({type:'success', msg:'Product has been successfully updated'}); 
+
+                    $scope.product = data.product;
+
+                    var primary = $.grep($scope.product.images, function(e){ return e.primary == true; });
+
+                    if (primary.length == 1) {
+                        $scope.primaryImage = primary[0].image;
+                    } else{
+                          $scope.primaryImage = "no-photo.png";
+                    }  
+
+                })
+                .error(function(data,status,header,config){
+                    $scope.alerts = []; 
+                    $scope.alerts.push({type:'danger', msg:"http error: "+ status});     
+                });
+            }
         };
         
         $scope.closeAlert = function(index) {
