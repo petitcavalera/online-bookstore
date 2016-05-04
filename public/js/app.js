@@ -10,8 +10,8 @@
         'pascalprecht.translate',       // Angular Translate
         'ngIdle',                       // Idle timer
         'ngSanitize',
-        'ngFileUpload'// ngSanitize
-       
+        'ngFileUpload',// ngSanitize
+        'ngTextTruncate'
             ])
 })();
 

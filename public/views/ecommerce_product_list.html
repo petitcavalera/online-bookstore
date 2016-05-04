@@ -81,7 +81,7 @@
                         <tr ng-repeat-end>
                             <td>  <img alt="image" style="height:150px; width:110px; margin-bottom: 20px;" ng-src="img/products/{{product.image}}" src="img/no-photo.png"> </td>
                             <td colspan="6">
-                                <strong>Description: </strong>{{product.description}}
+                                <p ng-text-truncate="product.description" ng-tt-words-threshold="50"></p>
                             </td>
                         </tr>
                         </tbody>
