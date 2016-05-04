@@ -3582,10 +3582,18 @@ function productItemController($scope, $stateParams, $http, $location){
     $http.get("product/id/"+ $stateParams.id).then(function(result) {     
         if(result.data != ''){
             $scope.product = result.data;
+            for (i=1;i<result.data.images.length;i++){
+                if (result.data.images[i].primary){
+                   $scope.dispPic = result.data.images[i].image;
+                }
+            }
         }else{
             $scope.product = '';
         }
     });
+    $scope.changePic = function (filename) {
+        $scope.dispPic = filename;
+    }
 }
 
 function addProductController($scope, $rootScope, $http, $location, Upload){
